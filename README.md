@@ -42,7 +42,7 @@ Open any email in Gmail, and the sidebar will automatically appear with the AI a
 
 <img width="1114" height="641" alt="image" src="https://github.com/user-attachments/assets/3c8db9fc-941c-4f4b-bad2-03f474bf6017" />
 
-
+---
 
 <img width="1109" height="644" alt="image" src="https://github.com/user-attachments/assets/0c0b8e1c-9944-4374-81c7-843df1e84525" />
 
