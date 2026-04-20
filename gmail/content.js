@@ -7,7 +7,7 @@ function injectSidebar() {
   sidebar.id = SIDEBAR_ID;
   sidebar.innerHTML = `
     <div class="sidebar-header">
-      <img src="${(chrome.runtime && chrome.runtime.getURL) ? chrome.runtime.getURL('icons/icon48.png') : ''}" alt="Logo" class="logo">
+      <img src="${chrome.runtime.getURL('icons/icon48.png')}" alt="🛡️" class="logo">
       <h3>Phishing Detector</h3>
       <button id="close-sidebar">&times;</button>
     </div>
@@ -56,11 +56,23 @@ function injectSidebar() {
   document.getElementById('report-false-positive').addEventListener('click', () => {
     const btn = document.getElementById('report-false-positive');
     const originalText = btn.innerText;
-    btn.innerText = '✅ Report Sent! Thank you.';
-    btn.disabled = true;
-    btn.style.backgroundColor = '#e8f5e9';
-    btn.style.color = '#2e7d32';
     
+    // Extract data and send to background
+    const emailData = extractEmailData();
+    chrome.runtime.sendMessage({
+      action: 'reportFalsePositive',
+      emailData
+    }, (response) => {
+      if (response && response.success) {
+        btn.innerText = '✅ Report Sent! AI is learning.';
+        btn.disabled = true;
+        btn.style.backgroundColor = '#e8f5e9';
+        btn.style.color = '#2e7d32';
+        
+        // No longer refreshing scan since we aren't whitelisting
+      }
+    });
+
     setTimeout(() => {
       btn.innerText = originalText;
       btn.disabled = false;
@@ -113,21 +125,27 @@ async function startScan() {
   const emailData = extractEmailData();
   
   // Use sendMessage to talk to the background script (bypassing CSP)
+  const scanTimeout = setTimeout(() => {
+    showError('Request timed out. Please refresh the page and try again.');
+  }, 15000);
+
   chrome.runtime.sendMessage({ 
     action: 'analyzeEmail', 
     emailData 
   }, (response) => {
+    clearTimeout(scanTimeout);
+    
     if (chrome.runtime.lastError) {
       console.error('Runtime Error:', chrome.runtime.lastError);
-      showError(chrome.runtime.lastError.message);
+      showError('Extension Error: ' + chrome.runtime.lastError.message);
       return;
     }
 
-    if (response.success) {
+    if (response && response.success) {
       displayResult(response.data);
     } else {
-      console.error('API Error:', response.error);
-      showError(response.error);
+      console.error('API Error:', response ? response.error : 'No response');
+      showError(response ? response.error : 'The background script did not respond.');
     }
   });
 }
@@ -153,8 +171,21 @@ function displayResult(analysis) {
   statusEl.style.display = 'none';
   resultEl.style.display = 'block';
 
+  if (!analysis || !analysis.verdict) {
+    showError('AI did not return a valid verdict.');
+    return;
+  }
+
   badgeEl.innerText = analysis.verdict;
   badgeEl.className = `badge badge-${analysis.verdict.toLowerCase()}`;
+  
+  // Show report button if not safe
+  if (analysis.verdict !== 'Safe') {
+    document.getElementById('report-false-positive').style.display = 'block';
+  } else {
+    // Optionally still allow reporting even if safe, but usually not needed for false positives
+    document.getElementById('report-false-positive').style.display = 'none';
+  }
   
   confBarEl.style.width = `${analysis.confidence_score}%`;
   confTextEl.innerText = `${analysis.confidence_score}%`;

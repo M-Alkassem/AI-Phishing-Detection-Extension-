@@ -67,6 +67,19 @@
     <button id="save">Save Settings</button>
     <div id="status" class="status"></div>
   </div>
+
+  <div class="card" style="margin-top: 20px;">
+    <h1>Correction Memory</h1>
+    <p class="hint">These are emails you previously reported as false positives. The AI uses these to learn your preferences and improve accuracy.</p>
+    
+    <ul id="corrections-list" style="list-style: none; padding: 0;">
+      <!-- Correction items will be injected here -->
+    </ul>
+    
+    <div id="no-corrections" class="hint">No reports yet. Click "Report False Positive" in Gmail to help the AI learn.</div>
+    
+    <button id="clear-corrections" style="background-color: #5f6368; margin-top: 15px;">Clear Memory</button>
+  </div>
   <script src="options.js"></script>
 </body>
 </html>
