@@ -1,0 +1,12 @@
+# Chrome Extension local files
+.DS_Store
+Thumbs.db
+*.log
+
+# Sensitive folders (if any)
+.env
+local_config/
+
+# Build artifacts
+dist/
+node_modules/

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Phishing Detector Settings</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      background-color: #f4f7f9;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    h1 { font-size: 22px; margin-top: 0; color: #1a73e8; }
+    .section { margin-bottom: 25px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+    .hint { font-size: 12px; color: #777; margin-top: 5px; }
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    button:hover { background-color: #1557b0; }
+    .status { margin-top: 15px; font-size: 14px; color: #1e8e3e; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>AI Configuration</h1>
+    <p class="hint">Configure your preferred AI model and API endpoint below.</p>
+    
+    <div class="section">
+      <label for="api-url">API Endpoint URL</label>
+      <input type="text" id="api-url" placeholder="https://api.provider.com/v1/...">
+      <div class="hint">The full URL for the chat completions or content generation endpoint.</div>
+    </div>
+
+    <div class="section">
+      <label for="api-key">API Key</label>
+      <input type="password" id="api-key" placeholder="Enter your secret key">
+    </div>
+
+    <div class="section">
+      <label for="model-id">Model ID</label>
+      <input type="text" id="model-id" placeholder="e.g., llama-3, gemini-pro, etc.">
+    </div>
+
+    <button id="save">Save Settings</button>
+    <div id="status" class="status"></div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>
